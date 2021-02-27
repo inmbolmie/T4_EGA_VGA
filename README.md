@@ -138,7 +138,7 @@ This is the formula I used to calculate the resistor values. The objective for e
 
 https://www.wolframalpha.com/input/?i=R2%2F%28R2%2B%282*%28R1%2F3%29%29%29+%3D+%281.4%2F3.3%29%2C+2*R1*R2%2F%283*%28R2%2B%282*R1%2F3%29%29%29%3D75
 
-Give that calculations, I took as the final resistor values:
+Given that calculations, I took as the final resistor values:
 
 * 130 ohm for R2
 * 255 ohm for R1 
