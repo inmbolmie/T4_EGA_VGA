@@ -130,17 +130,19 @@ Simply build the sketch with Arduino with the Teensyduino addon installed https:
 
 ## Circuits
 
-On the physical side, the digital to analog conversion to generate the VGA RGB signals is done using a simple R2R resistor ladder.  VGA_t4 supports up to 8 bit color (with an experimental 12 bit mode), but to get the EGA palette you only need 6 bit color, so a 6 bit ladder with 2 bits per color channel is used. This is the formula I used to calculate the resistor values. The objective for each color signal is getting from the 3,3V of the Teensy a 1,4V maximum level and 75 ohm output impedance, that will get converted to 0,7V when connecting to the VGA monitor and its 75 ohm terminations.
+On the physical side, the digital to analog conversion to generate the VGA RGB signals is done using a simple R2R resistor ladder.  VGA_t4 supports up to 8 bit color (with an experimental 12 bit mode), but to get the EGA palette you only need 6 bit color, so a 6 bit ladder with 2 bits per color channel is used. 
 
 ![R2R](/images/r2r.png)
 
+This is the formula I used to calculate the resistor values. The objective for each color signal is getting from the 3,3V of the Teensy a 1,4V maximum level and 75 ohm output impedance, that will get converted to 0,7V when connecting to the VGA monitor and its 75 ohm terminations.
+
 https://www.wolframalpha.com/input/?i=R2%2F%28R2%2B%282*%28R1%2F3%29%29%29+%3D+%281.4%2F3.3%29%2C+2*R1*R2%2F%283*%28R2%2B%282*R1%2F3%29%29%29%3D75
 
-Give that calculations II took as resistor values:
+Give that calculations, I took as the final resistor values:
 
-130 ohm for R2
-255 ohm for R1 
-510 ohm for 2R1, 
+* 130 ohm for R2
+* 255 ohm for R1 
+* 510 ohm for 2R1, 
 
 That should be close enough to the theoretical values. You can even use two 510 ohm resistors in parallel instead of the 255 ohm, or two 255 ohm in series instead of the 510 ohm, so that one less resistor value is required. This won’t win any color accuracy competition, but should be good enough.
 
