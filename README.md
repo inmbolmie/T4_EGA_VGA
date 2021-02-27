@@ -155,14 +155,17 @@ To overcome that there are different possible solutions, and I have selected two
 
 The true poor-man’s alternative. As the IBM CGA card line drivers are 74LS244 IC’s I calculate the minimum series resistor value from a (very optimistic, probably overestimated) 1mA maximum theoretical output current for the TTL gate. That gives for the 5V signal a maximum load of 5 Kohm. To get 3,3V from 5V through a 5K resistor divider you can use approximately a 1,5K and a 3K resistor.
 
-This approach is cheap and easy, but it has the drawback that the resistors act like a RC network, slowing down the transitions between the high and low logical levels as the retain charge stored in the parasitic capacitance of the wires and then resistors themselves that need to be discharged through the resistors. That flattens the signal and generates slow rising and falling edges that affect the sampling.
+This approach is cheap and easy, but it has the drawback that the resistors act like a RC network, slowing down the transitions between the high and low logical levels as the retain charge stored in the parasitic capacitance of the wires and the resistors themselves, that need to be discharged through the resistors. That flattens the signal and generates slow rising and falling edges that affect the sampling.
 
 So with a resistor network you can expect the converter to operate like this:
 
-Low resolution (320X200 graphic and 40 columns text) modes work quite well. Pixel clock is around 8Mhz, slow enough for the resistor network to operate acceptably.
-High resolution text modes (80 columns) are usable with a little noise.  
-High resolution graphic modes work acceptable with less demanding games that doesn’t use complex graphics (like Thexder)
-High resolution graphic modes with more complex games like PlanetX3 (EGA version) work like crap. This is due to the fact that Planet X3 makes heavy use of dithering in high resolution modes, and that dithering generates a very high frequency in the color channels (16Mhz) that is basically too much for the resistor network.
+* Low resolution (320X200 graphic and 40 columns text) modes work quite well. Pixel clock is around 8Mhz, slow enough for the resistor network to operate acceptably.
+
+*High resolution text modes (80 columns) are usable with noise.    
+
+*High resolution graphic modes work acceptable with less demanding games that doesn’t use complex graphics (like Thexder)
+
+*High resolution graphic modes with more complex games like PlanetX3 (EGA version) work like crap. This is due to the fact that Planet X3 makes heavy use of dithering in high resolution modes, and that dithering generates a very high frequency in the color channels (16Mhz) that is basically too much for the resistor network.
 
 If you are adventurous enough the quality can be quite improved lowering the resistor values, BUT that comes with the risk of overloading the line drivers of the graphics card or degrading the signal levels, so be warned if you try that.
 
@@ -204,7 +207,7 @@ I haven’t tried one other possible solution, that is connect the signals to th
 
 ## Board fabrication
 
-If you are crazy enough to make a real PCB for this, here you have the needed resources for the TXS0108E version, gerber file, bom and centroid for a popular online fabricator.
+If you are crazy enough to make a real PCB for this, I provide the needed resources for the TXS0108E version, gerber file, bom and component placement for a popular online fabricator.
 
 
 ![PCB board](/images/board.jpeg)
