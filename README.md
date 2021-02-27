@@ -32,7 +32,7 @@ Supported modes and some comments about each one.
 |0x09|320x200 color|UNTESTED|UNTESTED|UNTESTED|UNTESTED|UNTESTED|PCjr. mode, should work but untested|
 |0x0A|640x200 color|UNTESTED|UNTESTED|UNTESTED|UNTESTED|UNTESTED|PCjr. mode, should work but untested|
 |0x0D|320x200 color|320x200|no|Resistor network*|off|600Mhz|EGA 16 color low resolution|
-|0x0E|640x200 color|640x200|yes|Level converter*|on|984Mhz|EGA 16 color high resolution|
+|0x0E|640x200 color|640x480|yes|Level converter*|on|984Mhz|EGA 16 color high resolution|
 |0x0F|640x350 monochrome|640x480|no|Level converter*|both|984Mhz|EGA monochrome ultra-high resolution|
 |0x10|640x350 color|640x480|no|Level converter*|both|984Mhz|EGA 16 color ultra-high resolution|
 
