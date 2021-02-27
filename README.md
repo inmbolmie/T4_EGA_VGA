@@ -190,11 +190,12 @@ I haven’t tried one other possible solution, that is connect the signals to th
 
 ### Schematic for version 1, TXS0108E based capture solution.
 
-[SCH 1]
+![Schematic 1](/images/sch_1.png)
+
 
 ### Schematic for version 2, resistor based capture solution.
 
-[SCH 2]
+![Schematic 2](/images/sch_2.png)
 
 
 ## Board fabrication
