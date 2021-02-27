@@ -76,15 +76,15 @@ There are 4 buttons and 1 switch that can be used to adjust the converter operat
 
 ## Current limitations:
 
-Noise. sampling is not perfect and will lead to some pixel noise here and there.
+* **Noise**. sampling is not perfect and will lead to some pixel noise here and there.
 
-Color smearing. There is a limitation, especially in high res, due to the way VGA_t4 works separating the color bits between two concurrent DMA transfers. This can lead to a phase difference between the color components and visible color smearing more evident in high contrast pictures.
+* **Color smearing**. There is a limitation, especially in high res, due to the way VGA_t4 works separating the color bits between two concurrent DMA transfers. This can lead to a phase difference between the color components and visible color smearing more evident in high contrast pictures.
 
-Lost pixels. Currently some pixels are lost in the right side of the image. I think those are sacrificed to get better picture quality tweaking the DMA transfer values. This can be either OK or unacceptable to you. You can get the pixels back tuning some VGA_t4 magic numbers, but then color smearing is exacerbated.
+* **Lost pixels**. Currently some pixels are lost in the right side of the image. I think those are sacrificed to get better picture quality tweaking the DMA transfer values. This can be either OK or unacceptable to you. You can get the pixels back tuning some VGA_t4 magic numbers, but then color smearing is exacerbated.
 
-Line wobbling. There is also a problem in that the moment the VGA line start is generated  is not 100% exact and the lines can wobble horizontally a little. 
+* **Line wobbling**. There is also a problem in that the moment the VGA line start is generated  is not 100% exact and the lines can wobble horizontally a little. 
 
-Artifacts. Sampling is affected by the ISR and some pixels and lines are lost in the process. This is very evident in the 15,7Khz modes as the VGA signal is 31,5 Khz, almost exactly double the frequency so the artifacts happen twice per line and the affected pixels in one line are more or less the same than the line before and after. This generates a diagonal black line in each individual sampled picture. Example of a single screen capture:
+* **Artifacts**. Sampling is affected by the ISR and some pixels and lines are lost in the process. This is very evident in the 15,7Khz modes as the VGA signal is 31,5 Khz, almost exactly double the frequency so the artifacts happen twice per line and the affected pixels in one line are more or less the same than the line before and after. This generates a diagonal black line in each individual sampled picture. Example of a single screen capture:
 
 [LINEA DIAGONAL]
 
@@ -94,22 +94,23 @@ The 21,8Khz modes are less affected and there is no visible interference pattern
 
 [LINEAS 21,8]
 
-Instability. The Teensy running at overclocking frequencies isn’t the most stable thing in the world, so some sudden reboots are to be expected. Keep it cool.
+* **Instability**. The Teensy running at overclocking frequencies isn’t the most stable thing in the world. Some sudden reboots are to be expected. Keep it cool.
 
-No 720px modes. Unfortunately VGA_t4 at the moment doesn’t support any 720px mode, so MDA (720x350) is not supported. If we ever get that mode, MDA should be perfectly possible as the pixel clock is the same as EGA.
+* **No 720px modes**. Unfortunately VGA_t4 at the moment doesn’t support any 720px mode, so MDA (720x350) is not supported. If we ever get that mode, MDA should be perfectly possible as the pixel clock is the same as EGA.
 
+* **Needs alignment for every different card**.  The key to get a nice picture is adjusting the exact clock cycle after HSYNC where the converter starts sampling the signal. This point varies among different modes and different graphic cards. For my EGA card in CGA mode the point is quite different to a real CGA card. With a converter that operates oversampling, or for an analog monitor this is not a problem because you simply reposition the image horizontally, that is sometimes automatically done by the monitor itself. The converter tries to guess the optimal sampling point automatically looking for the first pixel in the image and remembering it afterwards, but this can fail in some cases, like:
 
-Needs alignment for every different card.  The key to get a nice picture is adjusting the exact clock cycle after HSYNC where the converter starts sampling the signal. This point varies among different modes and different graphic cards. For my EGA card in CGA mode the point is quite different to a real CGA card. With a converter that operates oversampling, or for an analog monitor this is not a problem because you simply reposition the image horizontally, that is sometimes automatically done by the monitor itself. The converter tries to guess the optimal sampling point automatically looking for the first pixel in the image and remembering it afterwards, but this can fail in some cases, like:
-
-There are no pixels in the first column
-Noise leads to a fake first pixel detection and you lose part of the image forever
-Some clever programmers generate borders around the image that are falsely interpreted as pixels. This happens for instance with Commander Keen. 
+    * There are no pixels in the first column
+ 
+    * Noise leads to a fake first pixel detection and you lose part of the image forever
+ 
+    * Some clever programmers generate borders around the image that are falsely interpreted as pixels. This happens for instance with Commander Keen. 
 
 Because all of this, the user can store using the control switches a value that overrides the automatic calculation if needed.
 
-Initial sync is slow. The adapter needs to sync to signals and generate the sampling tables programmatically, so it’s not the fastest thing out there.
+* **Initial sync is slow**. The adapter needs to sync to signals and generate the sampling tables programmatically, so it’s not the fastest thing out there.
 
-Probably won’t work well with some cards. If some graphics card for any reason doesn’t keep a steady on-spec pixel clock, the converter will fail miserably and vertical noise bands will develop where the sampling gets out of alignment. In those cases you can try to tweak the magic numbers for the graphic modes (pixel period, etc) but that is an absolutely DIY task.
+* **Probably won’t work well with some cards**. If some graphics card for any reason doesn’t keep a steady on-spec pixel clock, the converter will fail miserably and vertical noise bands will develop where the sampling gets out of alignment. In those cases you can try to tweak the magic numbers for the graphic modes (pixel period, etc) but that is an absolutely DIY task.
 
 
 ## Internal working
