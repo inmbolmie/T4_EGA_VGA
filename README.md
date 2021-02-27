@@ -18,7 +18,7 @@ For the VGA output signal generation it uses the awesome VGA_t4 library by Jean-
 
 Supported modes and some comments about each one.
 
-|Mode|Resolution|VGA resolution|Scanlines|Supported|HD Switch|CPU Speed|Remarks|
+|Mode|Resolution|VGA resolution|Scanlines|Supported|HR Switch|CPU Speed|Remarks|
 |---	|---	|---	|---	|---	|---	|---	|---	|
 |0x00|320x200 greyscale|320x200|no|Resistor network*|off|600Mhz|40 columns text mode|
 |0x01|320x200 color|320x200|no|Resistor network*|off|600Mhz|40 columns text mode|
