@@ -67,11 +67,11 @@ Comparison to an IBM 5154 EGA monitor connected to the same video signal
 
 There are 4 buttons and 1 switch that can be used to adjust the converter operation. Those are optional and not strictly required for basic operation.
 
-HR ON/OFF switch  (pin 14) when on, the 640x200 graphic and 80 columns text modes are enabled. The problem is that the signal specs for 320x200 and 640x200 are exactly the same, so the converter would have a bad day to try to distinguish between them. With the switch ON 320x200 will work the same, but with the switch OFF  320x200 will work better and the Teensy will operate at stock speed (600Mhz).
-Pixel adjustment decrease (pin 6). Decrease 1 unit the pixel alignment. This makes the sampling start earlier and is like displacing the picture to the right
-Pixel adjustment increase (pin 5). Increase 1 unit the pixel alignment. This makes the sampling start later and is like displacing the picture to the left
-Store pixel alignment (pin 7). Hold this button for 2 seconds to store the current pixel value in EEPROM. The autodiscovery will be disabled for the current mode.
-Reboot/Reset (pin 9). Push to reboot the Teensy. Hold for 2 seconds to erase all stored pixel alignment values and reboot, the autodiscovery will be enabled for all modes.
+* **HR ON/OFF switch  (pin 14)**. When on, the 640x200 graphic and 80 columns text modes are enabled. That is needed because the signal specs for 320x200 and 640x200 modes are exactly the same, so the converter would have a bad day to try to distinguish between them. With the switch ON, 320x200 will work the same, but with the switch OFF 320x200 will work better and the Teensy will operate at stock speed (600Mhz) and wouldn't even need extra cooling.
+* **Pixel adjustment decrease (pin 6)**. Decrease 1 unit the pixel alignment. This makes the sampling start earlier and is like displacing the picture to the right
+* **Pixel adjustment increase (pin 5)**. Increase 1 unit the pixel alignment. This makes the sampling start later and is like displacing the picture to the left
+* **Store pixel alignment (pin 7)**. Hold this button for 2 seconds to store the current pixel value in EEPROM. The autodiscovery will be disabled for the current mode.
+* **Reboot/Reset (pin 9)**. Push to reboot the Teensy. Hold for 2 seconds to erase all stored pixel alignment values and reboot, the autodiscovery will be enabled for all modes.
 
 
 ## Current limitations:
