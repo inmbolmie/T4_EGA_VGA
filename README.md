@@ -18,23 +18,25 @@ For the VGA output signal generation it uses the awesome VGA_t4 library by Jean-
 
 Supported modes and some comments about each one.
 
+http://minuszerodegrees.net/video/bios_video_modes.htm
+
 |Mode|Resolution|VGA resolution|Scanlines|Supported|HR Switch|CPU Speed|Remarks|
 |---	|---	|---	|---	|---	|---	|---	|---	|
-|0x00|320x200 greyscale|320x200|no|Resistor network*|off|600Mhz|40 columns text mode|
-|0x01|320x200 color|320x200|no|Resistor network*|off|600Mhz|40 columns text mode|
-|0x02|640x200 greyscale|640x480|yes|Level converter*|on|984Mhz|80 columns text mode|
-|0x03|640x200 color|640x480|yes|Level converter*|on|984Mhz|80 columns text mode|
-|0x04|320x200 color|320x200|no|Resistor network*|off|600Mhz|4 color CGA graphics|
-|0x05|320x200 greyscale|320x200|no|Resistor network*|off|600Mhz|4 gray CGA graphics|
-|0x06|640x200 monochrome|640x480|yes|Level converter*|on|984Mhz|CGA high res monochrome|
-|0x07|720x350 monochrome|NOT SUPPORTED|NOT SUPPORTED|NOT SUPPORTED|NOT SUPPORTED|NOT SUPPORTED|MDA monochrome mode|
-|0x08|160x200 color|UNTESTED|UNTESTED|UNTESTED|UNTESTED|UNTESTED|PCjr. mode, should work but untested|
-|0x09|320x200 color|UNTESTED|UNTESTED|UNTESTED|UNTESTED|UNTESTED|PCjr. mode, should work but untested|
-|0x0A|640x200 color|UNTESTED|UNTESTED|UNTESTED|UNTESTED|UNTESTED|PCjr. mode, should work but untested|
-|0x0D|320x200 color|320x200|no|Resistor network*|off|600Mhz|EGA 16 color low resolution|
-|0x0E|640x200 color|640x480|yes|Level converter*|on|984Mhz|EGA 16 color high resolution|
-|0x0F|640x350 monochrome|640x480|no|Level converter*|both|984Mhz|EGA monochrome ultra-high resolution|
-|0x10|640x350 color|640x480|no|Level converter*|both|984Mhz|EGA 16 color ultra-high resolution|
+|0x00h|320x200 greyscale|320x200|no|Resistor network*|off|600Mhz|40 columns text mode|
+|0x01h|320x200 color|320x200|no|Resistor network*|off|600Mhz|40 columns text mode|
+|0x02h|640x200 greyscale|640x480|yes|Level converter*|on|984Mhz|80 columns text mode|
+|0x03h|640x200 color|640x480|yes|Level converter*|on|984Mhz|80 columns text mode|
+|0x04h|320x200 color|320x200|no|Resistor network*|off|600Mhz|4 color CGA graphics|
+|0x05h|320x200 greyscale|320x200|no|Resistor network*|off|600Mhz|4 gray CGA graphics|
+|0x06h|640x200 monochrome|640x480|yes|Level converter*|on|984Mhz|CGA high res monochrome|
+|0x07h|720x350 monochrome|NOT SUPPORTED|NOT SUPPORTED|NOT SUPPORTED|NOT SUPPORTED|NOT SUPPORTED|MDA monochrome mode|
+|0x08h|160x200 color|UNTESTED|UNTESTED|UNTESTED|UNTESTED|UNTESTED|PCjr. mode, should work but untested|
+|0x09h|320x200 color|UNTESTED|UNTESTED|UNTESTED|UNTESTED|UNTESTED|PCjr. mode, should work but untested|
+|0x0Ah|640x200 color|UNTESTED|UNTESTED|UNTESTED|UNTESTED|UNTESTED|PCjr. mode, should work but untested|
+|0x0Dh|320x200 color|320x200|no|Resistor network*|off|600Mhz|EGA 16 color low resolution|
+|0x0Eh|640x200 color|640x480|yes|Level converter*|on|984Mhz|EGA 16 color high resolution|
+|0x0Fh|640x350 monochrome|640x480|no|Level converter*|both|984Mhz|EGA monochrome ultra-high resolution|
+|0x10h|640x350 color|640x480|no|Level converter*|both|984Mhz|EGA 16 color ultra-high resolution|
 
 
 Notes:
