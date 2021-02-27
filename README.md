@@ -132,7 +132,7 @@ Simply build the sketch with Arduino with the Teensyduino addon installed https:
 
 On the physical side, the digital to analog conversion to generate the VGA RGB signals is done using a simple R2R resistor ladder.  VGA_t4 supports up to 8 bit color (with an experimental 12 bit mode), but to get the EGA palette you only need 6 bit color, so a 6 bit ladder with 2 bits per color channel is used. This is the formula I used to calculate the resistor values. The objective for each color signal is getting from the 3,3V of the Teensy a 1,4V maximum level and 75 ohm output impedance, that will get converted to 0,7V when connecting to the VGA monitor and its 75 ohm terminations.
 
-[R2R]
+![R2R](/images/r2r.png)
 
 https://www.wolframalpha.com/input/?i=R2%2F%28R2%2B%282*%28R1%2F3%29%29%29+%3D+%281.4%2F3.3%29%2C+2*R1*R2%2F%283*%28R2%2B%282*R1%2F3%29%29%29%3D75
 
