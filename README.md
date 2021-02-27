@@ -176,9 +176,11 @@ This is a popular bidirectional voltage translator for microcontrollers that the
 
 I’ve tried other solutions, none of which was fully satisfactory:
 
-74HCT245 driver @5V plus a lower value (500 ohm) resistor divider. The 74HCT can drive higher loads than the 74LS so we can significantly lower the resistor values. Works well, but too cumbersome as you need the active component PLUS the resistors to make the 5V-3.3V conversion.
-74LVC245 driver @3,3V. Too noisy, sampling gives terrible quality.
-74FCT244 driver, quite rubbish sampling quality, didn’t work at all.
+**74HCT245 driver @5V plus a lower value (500 ohm) resistor divider.** The 74HCT can drive higher loads than the 74LS so we can significantly lower the resistor values. Works well, but too cumbersome as you need the active component PLUS the resistors to make the 5V-3.3V conversion.
+
+**74LVC245 driver @3,3V.** Too noisy, sampling gives terrible quality.
+
+**74FCT244 driver**, quite rubbish sampling quality, didn’t work at all.
 
 I haven’t tried one other possible solution, that is connect the signals to the Teensy through a single current limiting series resistor per channel. That is for the most adventurous out there, I haven’t tried because I don’t want to ruin my only Teensy board, but it should be possible if the right resistor value is low enough to get a good signal and high enough not to fry the Teensy. No idea of what that value should be.
 
