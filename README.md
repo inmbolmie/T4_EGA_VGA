@@ -151,6 +151,8 @@ To overcome that there are different possible solutions, and I have selected two
 
 ### Version one: Cheapo resistor divider.
 
+![BREADBOAD](/images/breadboard.jpeg)
+
 The true poor-man’s alternative. As the IBM CGA card line drivers are 74LS244 IC’s I calculate the minimum series resistor value from a (very optimistic, probably overestimated) 1mA maximum theoretical output current for the TTL gate. That gives for the 5V signal a maximum load of 5 Kohm. To get 3,3V from 5V through a 5K resistor divider you can use approximately a 1,5K and a 3K resistor.
 
 This approach is cheap and easy, but it has the drawback that the resistors act like a RC network, slowing down the transitions between the high and low logical levels as the retain charge stored in the parasitic capacitance of the wires and then resistors themselves that need to be discharged through the resistors. That flattens the signal and generates slow rising and falling edges that affect the sampling.
@@ -171,7 +173,7 @@ Also be sure that you double check the resistor network wiring, as there is a ri
 
 This is a popular bidirectional voltage translator for microcontrollers that theoretically can accept up to 55Mhz signals. It has just the 8 channels we need for the conversion (6 colors plus HSYNC and VSYNC). With this in place all the modes, high and low resolution work quite well. As it is popular it can be obtained very cheaply and you can even get it mounted in a nice ready to plug prototype board.
 
-[TXS0108E]
+![TXS0108](/images/txs.jpeg)
 
 
 I’ve tried other solutions, none of which was fully satisfactory:
