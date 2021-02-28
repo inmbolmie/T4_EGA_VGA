@@ -75,7 +75,7 @@ Video showing 350 lines text mode, the Checkit graphic tests, Monkey Island and 
 
 https://youtu.be/SZSuXO_p2-U
 
-
+[![VIDEO SHOWING PERFORMANCE](https://img.youtube.com/vi/SZSuXO_p2-U/0.jpg)](https://www.youtube.com/watch?v=SZSuXO_p2-U)
 
 
 ## Controls.
