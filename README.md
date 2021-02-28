@@ -48,10 +48,23 @@ Notes:
 
 ## Screenshots
 
-Some screenshots for the different supported modes. They are taken simply with a smartphone pointing to a modern IPS monitor. The computer driving the display is an IBM 5160 with a Paradise EGA card.
+Some screenshots for the different supported modes. They are taken simply with a smartphone pointing to a modern IPS monitor, so the alignment isn't perfect but they can give and idea about how it works. The computer driving the display is an IBM 5160 with a Paradise EGA card.
 
 
-[SHOTS]
+![CAP01](/images/cap01.jpeg)
+![CAP02](/images/cap02.jpeg)
+![CAP03](/images/cap03.jpeg)
+![CAP04](/images/cap04.jpeg)
+![CAP05](/images/cap05.jpeg)
+![CAP06](/images/cap06.jpeg)
+![CAP07](/images/cap07.jpeg)
+![CAP08](/images/cap08.jpeg)
+![CAP09](/images/cap09.jpeg)
+![CAP10](/images/cap10.jpeg)
+![CAP11](/images/cap11.jpeg)
+![CAP12](/images/cap12.jpeg)
+![CAP13](/images/cap13.jpeg)
+![CAP14](/images/cap14.jpeg)
 
 
 ## Videos
