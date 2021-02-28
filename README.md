@@ -13,6 +13,8 @@ The objective of this project was building the converter using only the Teensy, 
 
 For the VGA output signal generation it uses the awesome VGA_t4 library by Jean-Marc Harvengt  https://github.com/Jean-MarcHarvengt/VGA_t4, this project wouldn't be possible without it.
 
+Before jumping in, be sure that you have read the **current limitations** section and watch the video for an idea of its performance.
+
 
 ## Supported modes
 
@@ -69,13 +71,9 @@ Some screenshots for the different supported modes. They are taken simply with a
 
 ## Videos
 
-Video showing 350 lines text mode, the Checkit graphic tests, Monkey Island and Commander Keen in 320x200x16 mode and PlanetX3 in 640x350x16 mode. Yes, Monkey Island is slow, but that is because it is running in an IBM 5160, the converter operates fully at 60Hz.
+Video showing 350 lines text mode, the Checkit graphic tests, Monkey Island and Commander Keen in 320x200x16 mode and PlanetX3 in 640x350x16 mode. Yes, Monkey Island is slow, but that is because it is running in a poor IBM 5160, the converter operates always at the full 60Hz.
 
-[VIDEO]
-
-Comparison to an IBM 5154 EGA monitor connected to the same video signal
-
-[VIDEO]
+https://youtu.be/SZSuXO_p2-U
 
 
 ## Controls.
@@ -91,13 +89,18 @@ There are 4 buttons and 1 switch that can be used to adjust the converter operat
 
 ## Current limitations:
 
+This is an experimental converter so some amount of pain is expected.
+
+
+* **Instability**. The Teensy running at overclocking frequencies isn’t the most stable thing in the world. Some sudden reboots are to be expected. Also you will have to reboot the Teensy sometimes when changing between graphics modes. Keep it cool.
+
 * **Noise**. sampling is not perfect and will lead to some pixel noise here and there.
 
 * **Color smearing**. There is a limitation, especially in high res, due to the way VGA_t4 works separating the color bits between two concurrent DMA transfers. This can lead to a phase difference between the color components and visible color smearing more evident in high contrast pictures.
 
 * **Lost pixels**. Currently some pixels are lost in the right side of the image. I think those are sacrificed to get better picture quality tweaking the DMA transfer values. This can be either OK or unacceptable to you. You can get the pixels back tuning some VGA_t4 magic numbers, but then color smearing is exacerbated.
 
-* **Line wobbling**. There is also a problem in that the moment the VGA line start is generated  is not 100% exact and the lines can wobble horizontally a little. 
+* **Line wobbling**. There is also a problem in that the moment the VGA line start is generated  is not 100% exact and the lines can wobble a little. This is quite evident at about 2/3 of the screen horizontally.
 
 * **Artifacts**. Sampling is affected by the ISR and some pixels and lines are lost in the process. This is very evident in the 15,7Khz modes as the VGA signal is 31,5 Khz, almost exactly double the frequency so the artifacts happen twice per line and the affected pixels in one line are more or less the same than the line before and after. This generates horizontal (entire lines lost) and diagonal (lost pixels) black lines in each individual sampled picture. Example of a single screen capture for a 15,7Khz mode:
 
@@ -111,7 +114,6 @@ The 21,8Khz modes are less affected and there is no visible interference pattern
 ![PATTERN21](/images/pattern_21.jpeg)
 
 
-* **Instability**. The Teensy running at overclocking frequencies isn’t the most stable thing in the world. Some sudden reboots are to be expected. Keep it cool.
 
 * **No 720px modes**. Unfortunately VGA_t4 at the moment doesn’t support any 720px mode, so MDA (720x350) is not supported. If we ever get that mode, MDA should be perfectly possible as the pixel clock is the same as EGA.
 
