@@ -1,19 +1,19 @@
 /* Teensy 4.0 EGA/CGA to VGA CONVERTER
- *  © 2021 Inmbolmie inmbolmie [at] gmail [dot] com
- *  Distributed under the GNU GPL V3.0 license
- *  Based on the VGA_t4 library by J-M Harvengt https://github.com/Jean-MarcHarvengt/VGA_t4
- */
+    © 2021 Inmbolmie inmbolmie [at] gmail [dot] com
+    Distributed under the GNU GPL V3.0 license
+    Based on the VGA_t4 library by J-M Harvengt https://github.com/Jean-MarcHarvengt/VGA_t4
+*/
 
 
 #include <Arduino.h>
 #include "VGA_t4.h"
 #include <EEPROM.h>
 
-//If defined, generates debug output to the serial console. There is a similar definition in VGA_t4.c 
-#define DEBUG 
-//#undef DEBUG 
+//If defined, generates debug output to the serial console. There is a similar definition in VGA_t4.c
+#define DEBUG
+//#undef DEBUG
 
-//If defined, autodiscovery of CYCLES_FIRST_PIXEL values will be enabled. 
+//If defined, autodiscovery of CYCLES_FIRST_PIXEL values will be enabled.
 //If undefined, the default value specified for each mode in its definition will be used instead.
 #define AUTODISCOVERY
 
@@ -140,7 +140,7 @@ const int EEPROM_CYCLES_FIRST_PIXEL_MODE_200_COLOR_HR_USER_DEFINED = 38;
 String NAME = "";
 int MIN_CYCLES_HSYNC;
 int CYCLES_HSYNC_HIRES;
-int CYCLES_FIRST_PIXEL; 
+int CYCLES_FIRST_PIXEL;
 int CYCLES_PIXEL;
 int CYCLES_PIXEL_EXACT;
 int CYCLES_HALF_PIXEL_EXACT;
@@ -166,7 +166,7 @@ vga_mode_t VGA_MODE;
 const String NAME_200_COLOR = "Mode 320x200x16 @60";
 const int MIN_CYCLES_HSYNC_200_COLOR  = 38169  ;
 const int CYCLES_HSYNC_HIRES_200_COLOR = 38000  ;
-const int CYCLES_FIRST_PIXEL_200_COLOR  = 4827; 
+const int CYCLES_FIRST_PIXEL_200_COLOR  = 4827;
 const int CYCLES_PIXEL_200_COLOR  = 84  ;
 const int CYCLES_PIXEL_200_COLOR_EXACT = 83811  ;
 const int CYCLES_HALF_PIXEL_200_COLOR_EXACT = 41905 ;
@@ -534,7 +534,7 @@ FASTRUN void sampleFirstPixelData(boolean horizontalPolarity) {
   boolean levelHsync;
   while (hsyncs--) {
     lastHsync = !horizontalPolarity;;
-    while (true) {   
+    while (true) {
       levelHsync = digitalReadFast(PIN_HS);
       cyclesCurrent = ARM_DWT_CYCCNT;
       if (levelHsync == !horizontalPolarity   && levelHsync != lastHsync ) {
@@ -548,8 +548,8 @@ FASTRUN void sampleFirstPixelData(boolean horizontalPolarity) {
         cyclesRelativeHsync = 0;
         while (cyclesRelativeHsync < 15000UL) {
           cyclesCurrent = ARM_DWT_CYCCNT;
-          if (digitalReadFast(16)  
-              // || digitalReadFast(21) 
+          if (digitalReadFast(16)
+              // || digitalReadFast(21)
               || digitalReadFast(23)) {
 
             cyclesRelativeHsync = cyclesCurrent - cyclesLastHsync - 5;
@@ -624,6 +624,10 @@ FASTRUN void loop() {
   boolean isr_fired = false;
   boolean vgaInitialized = false;
   unsigned long uptime = 0;
+  long lastValidHsyncWidth = 0;
+  long runningAverageHsyncWidth = 0;
+  long runningAverageHsyncSamples = 0;
+  boolean lastHsyncWasValid = false;
 
 
 
@@ -819,7 +823,7 @@ FASTRUN void loop() {
             vgaInitialized = true;
             vgaMode = VGA_MODE_200_LINES_HR;
           }
-          
+
 #ifdef AUTODISCOVERY
           //Find location of the first pixel data if AUTODISCOVERY is enabled
           sampleFirstPixelData(HorizontalPolarity);
@@ -1031,8 +1035,8 @@ FASTRUN void loop() {
         }
 
 #ifdef AUTODISCOVERY
-          //Find location of the first pixel data if AUTODISCOVERY is enabled
-          sampleFirstPixelData(HorizontalPolarity);
+        //Find location of the first pixel data if AUTODISCOVERY is enabled
+        sampleFirstPixelData(HorizontalPolarity);
 #endif
 
         //load previous value from EEPROM
@@ -1176,9 +1180,21 @@ FASTRUN void loop() {
 
             if (levelHsync == !HorizontalPolarity  && levelHsync != lastHsync ) {
               //HSYNC DETECTED
+
               if (!firstHsync && (countIsr != countIsr2 || countIsr != countIsr3)) {
                 //Isr fired during sampling, so not reliable and we skip the line
-                skipHS = true;
+                //skipHS = true;
+                //Hack to try to use this lines anyway as there is a strange pattern emerging at approx 1/3 of the screen width
+                //where the pixels update less, somehow this is synchonizing with the ISR just at that moment in some lines
+                if (lastValidHsyncWidth != 0) {
+                  cyclesCurrent = cyclesLastHsync + lastValidHsyncWidth;
+                } else {
+                  skipHS = true;
+                }
+              }
+
+              else {
+                lastValidHsyncWidth = cyclesCurrent - cyclesLastHsync;
               }
               cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
 
@@ -1247,7 +1263,7 @@ FASTRUN void loop() {
           /*while (cyclesCurrent < (cyclesLastHsync + cyclesFirstPixelToUse - 500)) {
             cyclesCurrent = ARM_DWT_CYCCNT;
 
-          }*/
+            }*/
 
           inputState = STATE_READING_PIXELS;
           expectedPixel = 0;
@@ -1263,7 +1279,7 @@ FASTRUN void loop() {
             cyclesCurrent = ARM_DWT_CYCCNT;
             cyclesRelativeHsync = cyclesCurrent - cyclesLastHsync;
 
-            
+
 
             //calculate pixel position and deviation from ideal sampling point
             currentPixel = cycleToPixel[cyclesRelativeHsync];
@@ -1286,12 +1302,12 @@ FASTRUN void loop() {
               framebuffer[pixelToFrameBuffer[currentLine] + currentPixel]  = pixelTranslation[CGA][pixel];
               //Uncomment to adjust presampling
               /*
-              Serial.println(cyclesRelativeHsync, DEC);
-              Serial.println(currentPixel, DEC);
-              Serial.println(currentLine, DEC);
-              Serial.println(cyclesRelativeHsync - pixelToCyclePresample[currentPixel], DEC);
-              Serial.println(cyclesRelativeHsync - pixelToCycle[currentPixel], DEC);
-              Serial.println("");
+                Serial.println(cyclesRelativeHsync, DEC);
+                Serial.println(currentPixel, DEC);
+                Serial.println(currentLine, DEC);
+                Serial.println(cyclesRelativeHsync - pixelToCyclePresample[currentPixel], DEC);
+                Serial.println(cyclesRelativeHsync - pixelToCycle[currentPixel], DEC);
+                Serial.println("");
               */
               //framebuffer[pixelToFrameBuffer[currentLine] +fb_stride + currentPixel]  = pixelTranslation[CGA][pixel];
             }
@@ -1311,7 +1327,7 @@ FASTRUN void loop() {
         }
 
         else if (inputState == STATE_WAIT_VSYNC)  {
-        
+
           while ( (cyclesCurrent - cyclesLastVsync) < MIN_CYCLES_VSYNC_200_COLOR )
           {
             cyclesCurrent = ARM_DWT_CYCCNT;
@@ -1339,7 +1355,7 @@ FASTRUN void loop() {
             //We have some free clock cycles to process OSD
             osd(NAME, vga);
 #endif
-          } 
+          }
           lastVsync = levelVsync;
         }
 
@@ -1382,9 +1398,21 @@ FASTRUN void loop() {
 
             if (levelHsync == !HorizontalPolarity  && levelHsync != lastHsync ) {
               //HSYNC DETECTED
+
               if (!firstHsync && (countIsr != countIsr2 || countIsr != countIsr3)) {
                 //Isr fired during sampling, so not reliable and we skip the line
-                skipHS = true;
+                //skipHS = true;
+                //Hack to try to use this lines anyway as there is a strange pattern emerging at approx 1/3 of the screen width
+                //where the pixels update less, somehow this is synchonizing with the ISR just at that moment in some lines
+                if (lastValidHsyncWidth != 0) {
+                  cyclesCurrent = cyclesLastHsync + lastValidHsyncWidth;
+                } else {
+                  skipHS = true;
+                }
+              }
+
+              else {
+                lastValidHsyncWidth = cyclesCurrent - cyclesLastHsync;
               }
               cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
               currentLine++;
@@ -1479,12 +1507,12 @@ FASTRUN void loop() {
               framebuffer[pixelToFrameBuffer[currentLine] + currentPixel]  = pixelTranslation[CGA][pixel];
               //Uncomment to adjust presampling
               /*
-              Serial.println(cyclesRelativeHsync, DEC);
-              Serial.println(currentPixel, DEC);
-              Serial.println(currentLine, DEC);
-              Serial.println(cyclesRelativeHsync - pixelToCyclePresample[currentPixel], DEC);
-              Serial.println(cyclesRelativeHsync - pixelToCycle[currentPixel], DEC);
-              Serial.println("");
+                Serial.println(cyclesRelativeHsync, DEC);
+                Serial.println(currentPixel, DEC);
+                Serial.println(currentLine, DEC);
+                Serial.println(cyclesRelativeHsync - pixelToCyclePresample[currentPixel], DEC);
+                Serial.println(cyclesRelativeHsync - pixelToCycle[currentPixel], DEC);
+                Serial.println("");
               */
             }
 
@@ -1502,7 +1530,7 @@ FASTRUN void loop() {
         }
 
         else if (inputState == STATE_WAIT_VSYNC)  {
-          
+
           while ( (cyclesCurrent - cyclesLastVsync) < MIN_CYCLES_VSYNC_200_COLOR_HR )
           {
             cyclesCurrent = ARM_DWT_CYCCNT;
@@ -1530,7 +1558,7 @@ FASTRUN void loop() {
             //We have some free clock cycles to process OSD
             osd(NAME, vga);
 #endif
-          } 
+          }
           lastVsync = levelVsync;
         }
 
@@ -1578,15 +1606,46 @@ FASTRUN void loop() {
 
             if (levelHsync == !HorizontalPolarity  && levelHsync != lastHsync ) {
               //HSYNC DETECTED
+              cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
 
-              if (!firstHsync && (countIsr != countIsr2 || countIsr != countIsr3)) {
+              if ((countIsr != countIsr2 || countIsr != countIsr3)) {
+                //We are into a NON valid HSYNC
                 //Isr fired during sampling, so not reliable and we skip the line
                 //skipHS = true;
+                
                 //Hack to try to use this lines anyway as there is a strange pattern emerging at approx 1/3 of the screen width
                 //where the pixels update less, somehow this is synchonizing with the ISR just at that moment in some lines
-                cyclesCurrent = cyclesLastHsync + MIN_CYCLES_HSYNC_350_COLOR + 30;
+                //so when an HSYNC sample fails we use a running average of the HSYNC width over the last good HSYNC instead of discarding
+                //This is preferred over having another magic number for this mode
+                if (lastValidHsyncWidth != 0 && !firstHsync ) {
+                  cyclesCurrent = cyclesLastHsync + runningAverageHsyncWidth ;
+                } else {
+                  //We still don't have a calculated running average
+                  skipHS = true;
+                }
+                lastHsyncWasValid = false;
               }
-              cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
+
+              else {
+                if (lastHsyncWasValid  && ((cyclesCurrent - cyclesLastHsync) < 50000)) {
+                  //We are into a valid HSYNC
+
+                  lastValidHsyncWidth = (cyclesCurrent - cyclesLastHsync);
+
+                  if (runningAverageHsyncWidth == 0) {
+                    runningAverageHsyncWidth = (cyclesCurrent - cyclesLastHsync);
+                    runningAverageHsyncSamples = 1;
+                  } else {
+                    //Update hsync width running average 
+                    runningAverageHsyncSamples ++;
+                    runningAverageHsyncWidth = runningAverageHsyncWidth + ((lastValidHsyncWidth - runningAverageHsyncWidth) / runningAverageHsyncSamples);
+
+                  }
+                }
+                lastHsyncWasValid = true;
+              }
+              
+              //Continue processing the HSYNC
               currentLine++;
               if (currentLine >= 0) {
                 inputState = STATE_WAIT_FIRST_PIXEL;
@@ -1615,6 +1674,7 @@ FASTRUN void loop() {
               else {
                 //Not skipped
                 cyclesLastHsync = cyclesCurrent;
+
                 //digitalWriteFast(6, !digitalReadFast(6));
                 if (currentLine < 0) {
                   //sleep 2/3 of HS
@@ -1676,12 +1736,12 @@ FASTRUN void loop() {
               framebuffer[pixelToFrameBuffer[currentLine] + currentPixel]  = pixelTranslation[EGA][pixel];
               //Uncomment to adjust presampling
               /*
-              Serial.println(cyclesRelativeHsync, DEC);
-              Serial.println(currentPixel, DEC);
-              Serial.println(currentLine, DEC);
-              Serial.println(cyclesRelativeHsync - pixelToCyclePresample[currentPixel], DEC);
-              Serial.println(cyclesRelativeHsync - pixelToCycle[currentPixel], DEC);
-              Serial.println("");
+                Serial.println(cyclesRelativeHsync, DEC);
+                Serial.println(currentPixel, DEC);
+                Serial.println(currentLine, DEC);
+                Serial.println(cyclesRelativeHsync - pixelToCyclePresample[currentPixel], DEC);
+                Serial.println(cyclesRelativeHsync - pixelToCycle[currentPixel], DEC);
+                Serial.println("");
               */
               //Serial.println(pixel,BIN);
               //framebuffer[pixelToFrameBuffer2[currentPixel][currentLine]]  = pixelTranslation[EGA][pixel];
@@ -1701,7 +1761,7 @@ FASTRUN void loop() {
         }
 
         else if (inputState == STATE_WAIT_VSYNC)  {
-          
+
           while (inputState == STATE_WAIT_VSYNC)  {
 
             boolean hsOK = false;
@@ -1763,7 +1823,7 @@ FASTRUN void loop() {
 #endif
 
             } // else if ( (cyclesCurrent - cyclesLastVsync) > MAX_CYCLES_VSYNC_350_COLOR ) {
-              //sync = false;
+            //sync = false;
             //}
             lastVsync = levelVsync;
           }
@@ -1922,12 +1982,12 @@ FASTRUN void osd(String modeName, VGA_T4 vga) {
       delay(3000);
       sync = false;
       currentMode = 0;
-    } 
-  } else if (stateButtonReset && !stateButtonResetPrevious) {
-      //reset
-      sync = false;
-      currentMode = 0;
     }
+  } else if (stateButtonReset && !stateButtonResetPrevious) {
+    //reset
+    sync = false;
+    currentMode = 0;
+  }
 
 
   stateButtonPlusPrevious = stateButtonPlus;
