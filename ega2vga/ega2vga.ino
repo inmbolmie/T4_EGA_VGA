@@ -382,13 +382,12 @@ const int CYCLES_PIXEL_350_COLOR  = 61;
 const int CYCLES_PIXEL_350_COLOR_EXACT = 60528  ;
 const int CYCLES_HALF_PIXEL_350_COLOR_EXACT = 30264 ;
 const int CYCLES_HALF_PIXEL_350_COLOR = 30  ;
-const int CYCLES_PIXEL_350_COLOR_MAX_SKEW = 10  ; //15
+const int CYCLES_PIXEL_350_COLOR_MAX_SKEW = 20  ; //15
 const int CYCLES_PIXEL_350_COLOR_PRESAMPLE = 20 ; //15
-const int MAX_CYCLES_VSYNC_350_COLOR = 16502032 ;
+const int MAX_CYCLES_VSYNC_350_COLOR = 16702032 ;
 const int MIN_CYCLES_VSYNC_350_COLOR = 16300000  ;
 const int BLANK_LINES_SCREEN_350_COLOR = 0  ;
 const int LINES_350_LINES = 352 ;
-const int MAX_LINES_350_LINES = 352;
 const int PIXELS_350_LINES = 640;
 const int SCANLINES_350_LINES = 1;
 const vga_mode_t VGA_MODE_350_LINES = VGA_MODE_640x480;
@@ -1582,7 +1581,10 @@ FASTRUN void loop() {
 
               if (!firstHsync && (countIsr != countIsr2 || countIsr != countIsr3)) {
                 //Isr fired during sampling, so not reliable and we skip the line
-                skipHS = true;
+                //skipHS = true;
+                //Hack to try to use this lines anyway as there is a strange pattern emerging at approx 1/3 of the screen width
+                //where the pixels update less, somehow this is synchonizing with the ISR just at that moment in some lines
+                cyclesCurrent = cyclesLastHsync + MIN_CYCLES_HSYNC_350_COLOR + 30;
               }
               cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
               currentLine++;
@@ -1598,7 +1600,7 @@ FASTRUN void loop() {
                 cyclesLastHsync = cyclesLastHsync + MIN_CYCLES_HSYNC_350_COLOR;
                 inputState = STATE_WAIT_HSYNC;
 
-                if (currentLine == MAX_LINES_350_LINES)   {
+                if (currentLine == LINES_350_LINES)   {
                   //End of screen
                   inputState = STATE_WAIT_VSYNC;
                   lastVsync = digitalReadFast(PIN_VS);
@@ -1688,7 +1690,7 @@ FASTRUN void loop() {
             if (currentPixel >= PIXELS_350_LINES) {
               //End of line
               inputState = STATE_WAIT_HSYNC;
-              if (currentLine == MAX_LINES_350_LINES)   {
+              if (currentLine == LINES_350_LINES)   {
                 //End of screen
                 inputState = STATE_WAIT_VSYNC;
                 lastVsync = digitalReadFast(PIN_VS);
