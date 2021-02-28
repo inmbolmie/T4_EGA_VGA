@@ -99,15 +99,17 @@ There are 4 buttons and 1 switch that can be used to adjust the converter operat
 
 * **Line wobbling**. There is also a problem in that the moment the VGA line start is generated  is not 100% exact and the lines can wobble horizontally a little. 
 
-* **Artifacts**. Sampling is affected by the ISR and some pixels and lines are lost in the process. This is very evident in the 15,7Khz modes as the VGA signal is 31,5 Khz, almost exactly double the frequency so the artifacts happen twice per line and the affected pixels in one line are more or less the same than the line before and after. This generates a diagonal black line in each individual sampled picture. Example of a single screen capture:
+* **Artifacts**. Sampling is affected by the ISR and some pixels and lines are lost in the process. This is very evident in the 15,7Khz modes as the VGA signal is 31,5 Khz, almost exactly double the frequency so the artifacts happen twice per line and the affected pixels in one line are more or less the same than the line before and after. This generates horizontal (entire lines lost) and diagonal (lost pixels) black lines in each individual sampled picture. Example of a single screen capture for a 15,7Khz mode:
 
-[LINEA DIAGONAL]
+![PATTERN15](/images/pattern_15.jpeg)
+
 
 Thankfully the VGA horizontal frequency is not EXACTLY double the input horizontal frequency, because in that case the affected pixels will be always the same and a slow moving vertical black band would be always present in the picture, or if the band were around the HSYNC area you will get absolutely no picture at all.
 
-The 21,8Khz modes are less affected and there is no visible interference pattern in the picture. Example of a single screen capture for this mode:
+The 21,8Khz modes are less affected and there is no visible interference pattern in the picture. Example of a single screen capture for this mode, where the small horizontal lines are the pixels lost due to the ISR firing:
 
-[LINEAS 21,8]
+[![PATTERN21](/images/pattern_21.jpeg)
+
 
 * **Instability**. The Teensy running at overclocking frequencies isn’t the most stable thing in the world. Some sudden reboots are to be expected. Keep it cool.
 
