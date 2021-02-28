@@ -148,6 +148,8 @@ Simply build the sketch with Arduino with the Teensyduino addon installed https:
 
 ## Circuits
 
+### VGA signal generation
+
 On the physical side, the digital to analog conversion to generate the VGA RGB signals is done using a simple R2R resistor ladder.  VGA_t4 supports up to 8 bit color (with an experimental 12 bit mode), but to get the EGA palette you only need 6 bit color, so a 6 bit ladder with 2 bits per color channel is used. 
 
 ![R2R](/images/r2r.png)
@@ -163,6 +165,9 @@ Given that calculations, I took as the final resistor values:
 * 510 ohm for 2R1, 
 
 That should be close enough to the theoretical values. You can even use two 510 ohm resistors in parallel instead of the 255 ohm, or two 255 ohm in series instead of the 510 ohm, so that one less resistor value is required. This won’t win any color accuracy competition, but should be good enough.
+
+
+### EGA/CGA input capture
 
 Unfortunately, for the EGA/CGA signal sampling we need to make voltage conversion, as EGA/CGA is TTL signalling with a 5V logic level, and the Teensy 4 only supports a maximum of 3,3V in its input pins. Give them the full 5V and you will fry the poor thing. 
 
@@ -208,9 +213,6 @@ I’ve tried other solutions, none of which was fully satisfactory:
 **74FCT244 driver**, quite rubbish sampling quality, didn’t work at all.
 
 I haven’t tried one other possible solution, that is connect the signals to the Teensy through a single current limiting series resistor per channel. That is for the most adventurous out there, I haven’t tried because I don’t want to ruin my only Teensy board, but it should be possible if the right resistor value is low enough to get a good signal and high enough not to fry the Teensy. No idea of what that value should be.
-
-
-[NOISE]
 
 
 ## Schematics
