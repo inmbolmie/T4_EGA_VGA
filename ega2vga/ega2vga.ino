@@ -1183,18 +1183,8 @@ FASTRUN void loop() {
 
               if (!firstHsync && (countIsr != countIsr2 || countIsr != countIsr3)) {
                 //Isr fired during sampling, so not reliable and we skip the line
-                //skipHS = true;
-                //Hack to try to use this lines anyway as there is a strange pattern emerging at approx 1/3 of the screen width
-                //where the pixels update less, somehow this is synchonizing with the ISR just at that moment in some lines
-                if (lastValidHsyncWidth != 0) {
-                  cyclesCurrent = cyclesLastHsync + lastValidHsyncWidth;
-                } else {
-                  skipHS = true;
-                }
-              }
-
-              else {
-                lastValidHsyncWidth = cyclesCurrent - cyclesLastHsync;
+                skipHS = true;
+                
               }
               cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
 
@@ -1401,19 +1391,9 @@ FASTRUN void loop() {
 
               if (!firstHsync && (countIsr != countIsr2 || countIsr != countIsr3)) {
                 //Isr fired during sampling, so not reliable and we skip the line
-                //skipHS = true;
-                //Hack to try to use this lines anyway as there is a strange pattern emerging at approx 1/3 of the screen width
-                //where the pixels update less, somehow this is synchonizing with the ISR just at that moment in some lines
-                if (lastValidHsyncWidth != 0) {
-                  cyclesCurrent = cyclesLastHsync + lastValidHsyncWidth;
-                } else {
-                  skipHS = true;
-                }
+                skipHS = true;
               }
 
-              else {
-                lastValidHsyncWidth = cyclesCurrent - cyclesLastHsync;
-              }
               cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
               currentLine++;
               if (currentLine >= 0) {
@@ -1820,6 +1800,8 @@ FASTRUN void loop() {
 
               //We have some free clock cycles to process OSD
               osd(NAME, vga);
+
+              
 #endif
 
             } // else if ( (cyclesCurrent - cyclesLastVsync) > MAX_CYCLES_VSYNC_350_COLOR ) {
