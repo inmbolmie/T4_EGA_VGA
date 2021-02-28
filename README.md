@@ -108,7 +108,7 @@ Thankfully the VGA horizontal frequency is not EXACTLY double the input horizont
 
 The 21,8Khz modes are less affected and there is no visible interference pattern in the picture. Example of a single screen capture for this mode, where the small horizontal lines are the pixels lost due to the ISR firing:
 
-[![PATTERN21](/images/pattern_21.jpeg)
+![PATTERN21](/images/pattern_21.jpeg)
 
 
 * **Instability**. The Teensy running at overclocking frequencies isn’t the most stable thing in the world. Some sudden reboots are to be expected. Keep it cool.
