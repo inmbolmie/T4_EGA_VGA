@@ -272,12 +272,6 @@ Because the DMA resources are limited and they are already taken for VGA signal 
 I think commercial FPGA based solutions sample at like 4xNyquist near 130Mhz, so they can get a very precise alignment and give a very high image quality that way, but that rates are simply out of reach for a Teensy or any microcontroller today in existence, so other strategies need to be used to make it work without specialized hardware like the MCE2VGA or Raspberry pi zero + CPLD solution do.
 
 
-**My favorite game doesn’t work or looks like shit with your converter. You have killed Chritsmas!**
-
-Deal with it...
-
-
-
 ## Details about graphic modes definition.
 
 If you want to tinker with the magic numbers, this is an explanation about each one.
