@@ -252,7 +252,7 @@ I see this as a nice weekend mini-project if you already have the Teensy, a bunc
 Of course I’ve heard, but in this case the code performance is absolutely critical. You have a fixed amount of clock cycles to process each sample before the next sample arrives. Some sections simply don’t work fast enough unless you use constants instead of variables, and reduce loops and logic checks to the bare minimum. And that is even more complicated by the VGA ISR firing all the time and interfering with the sampling. So I need/prefer to keep the modes all separated in code, despite 99% of that code being identical between different modes. Maybe some assembly code would help but actually it is working without needing any. Maybe that could make high resolution modes work at lower clock frequencies.
 
 
-**Could this converter kill my beloved retro graphics card/computer/monitor?**
+**Could this converter kill my beloved vintage graphics card/computer/monitor?**
 
 Yes it can. I’ve not been able to test it with much hardware, I only have an IBM CGA card and a Paradise EGA card to test the converter, and with those it works flawlessly, but who knows with others.
 
