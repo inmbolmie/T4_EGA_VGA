@@ -11,7 +11,7 @@
 
 //If defined, generates debug output to the serial console. There is a similar definition in VGA_t4.c
 #define DEBUG
-//#undef DEBUG
+#undef DEBUG
 
 //If defined, autodiscovery of CYCLES_FIRST_PIXEL values will be enabled.
 //If undefined, the default value specified for each mode in its definition will be used instead.
@@ -1184,7 +1184,7 @@ FASTRUN void loop() {
               if (!firstHsync && (countIsr != countIsr2 || countIsr != countIsr3)) {
                 //Isr fired during sampling, so not reliable and we skip the line
                 skipHS = true;
-                
+
               }
               cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
 
@@ -1342,9 +1342,11 @@ FASTRUN void loop() {
               Serial.print("  Uptime:");
               Serial.println(uptime / 60);
             }
+
+#endif
+
             //We have some free clock cycles to process OSD
             osd(NAME, vga);
-#endif
           }
           lastVsync = levelVsync;
         }
@@ -1535,9 +1537,10 @@ FASTRUN void loop() {
               Serial.print("  Uptime:");
               Serial.println(uptime / 60);
             }
+
+#endif
             //We have some free clock cycles to process OSD
             osd(NAME, vga);
-#endif
           }
           lastVsync = levelVsync;
         }
@@ -1592,7 +1595,7 @@ FASTRUN void loop() {
                 //We are into a NON valid HSYNC
                 //Isr fired during sampling, so not reliable and we skip the line
                 //skipHS = true;
-                
+
                 //Hack to try to use this lines anyway as there is a strange pattern emerging at approx 1/3 of the screen width
                 //where the pixels update less, somehow this is synchonizing with the ISR just at that moment in some lines
                 //so when an HSYNC sample fails we use a running average of the HSYNC width over the last good HSYNC instead of discarding
@@ -1616,7 +1619,7 @@ FASTRUN void loop() {
                     runningAverageHsyncWidth = (cyclesCurrent - cyclesLastHsync);
                     runningAverageHsyncSamples = 1;
                   } else {
-                    //Update hsync width running average 
+                    //Update hsync width running average
                     runningAverageHsyncSamples ++;
                     runningAverageHsyncWidth = runningAverageHsyncWidth + ((lastValidHsyncWidth - runningAverageHsyncWidth) / runningAverageHsyncSamples);
 
@@ -1624,7 +1627,7 @@ FASTRUN void loop() {
                 }
                 lastHsyncWasValid = true;
               }
-              
+
               //Continue processing the HSYNC
               currentLine++;
               if (currentLine >= 0) {
@@ -1798,11 +1801,11 @@ FASTRUN void loop() {
                 Serial.println(uptime / 60);
               }
 
+
+#endif
+
               //We have some free clock cycles to process OSD
               osd(NAME, vga);
-
-              
-#endif
 
             } // else if ( (cyclesCurrent - cyclesLastVsync) > MAX_CYCLES_VSYNC_350_COLOR ) {
             //sync = false;
