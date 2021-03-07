@@ -52,13 +52,13 @@ const byte pixelTranslation[ 2 ][ 64 ] =
   //                                                              <---------LO INT-----------   ---------HIGH INT------------>
   {
     /*000000*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*000010*/ 0b10000000, /*XXXXXX*/ 0b00000000, /*000100*/ 0b01001001, /*XXXXXX*/ 0b00000000, /*000110*/ 0b11001001, /*XXXXXX*/ 0b00000000,
-    /*001000*/ 0b00000010, /*XXXXXX*/ 0b00000000, /*001010B*/0b10000001, /*XXXXXX*/ 0b00000000, /*001100*/ 0b01001011, /*XXXXXX*/ 0b00000000, /*001110*/ 0b11001011, /*XXXXXX*/ 0b00000000,
-    /*010000*/ 0b01001001, /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*010100*/ 0b01001001, /*XXXXXX*/ 0b00000000, /*010110*/ 0b11000000, /*XXXXXX*/ 0b00000000,
-    /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*011100*/ 0b00000011, /*XXXXXX*/ 0b00000000, /*011110*/ 0b11000011, /*XXXXXX*/ 0b00000000,
+    /*001000*/ 0b00000010, /*XXXXXX*/ 0b00000000, /*001010*/ 0b10000001, /*XXXXXX*/ 0b00000000, /*001100*/ 0b01001011, /*XXXXXX*/ 0b00000000, /*001110*/ 0b11001011, /*XXXXXX*/ 0b00000000,
+    /*010000*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*010010*/ 0b10000000, /*XXXXXX*/ 0b00000000, /*010100*/ 0b01001001, /*XXXXXX*/ 0b00000000, /*010110*/ 0b11000000, /*XXXXXX*/ 0b00000000,
+    /*011000*/ 0b00000010, /*XXXXXX*/ 0b00000000, /*011010*/ 0b10000001, /*XXXXXX*/ 0b00000000, /*011100*/ 0b00000011, /*XXXXXX*/ 0b00000000, /*011110*/ 0b11000011, /*XXXXXX*/ 0b00000000,
     /*100000*/ 0b00010000, /*XXXXXX*/ 0b00000000, /*100010*/ 0b10010000, /*XXXXXX*/ 0b00000000, /*100100*/ 0b01011001, /*XXXXXX*/ 0b00000000, /*100110*/ 0b11011001, /*XXXXXX*/ 0b00000000,
     /*101000*/ 0b00010010, /*XXXXXX*/ 0b00000000, /*101010*/ 0b10010010, /*XXXXXX*/ 0b00000000, /*101100*/ 0b01011011, /*XXXXXX*/ 0b00000000, /*101110*/ 0b11011011, /*XXXXXX*/ 0b00000000,
-    /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*110100*/ 0b00011000, /*XXXXXX*/ 0b00000000, /*110110*/ 0b11011000, /*XXXXXX*/ 0b00000000,
-    /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*XXXXXX*/ 0b00000000, /*111100*/ 0b00011011, /*XXXXXX*/ 0b00000000, /*111110*/ 0b11011011, /*XXXXXX*/ 0b00000000
+    /*110000*/ 0b00010000, /*XXXXXX*/ 0b00000000, /*110010*/ 0b10010000, /*XXXXXX*/ 0b00000000, /*110100*/ 0b00011000, /*XXXXXX*/ 0b00000000, /*110110*/ 0b11011000, /*XXXXXX*/ 0b00000000,
+    /*111000*/ 0b00010010, /*XXXXXX*/ 0b00000000, /*111010*/ 0b10010010, /*XXXXXX*/ 0b00000000, /*111100*/ 0b00011011, /*XXXXXX*/ 0b00000000, /*111110*/ 0b11011011, /*XXXXXX*/ 0b00000000
   }
 };
 
@@ -1180,13 +1180,46 @@ FASTRUN void loop() {
 
             if (levelHsync == !HorizontalPolarity  && levelHsync != lastHsync ) {
               //HSYNC DETECTED
+              cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
 
-              if (!firstHsync && (countIsr != countIsr2 || countIsr != countIsr3)) {
+              if ((countIsr != countIsr2 || countIsr != countIsr3)) {
+                //We are into a NON valid HSYNC
                 //Isr fired during sampling, so not reliable and we skip the line
+                //skipHS = true;
+
+                //Hack to try to use this lines anyway as there is a strange pattern emerging at approx 1/3 of the screen width
+                //where the pixels update less, somehow this is synchonizing with the ISR just at that moment in some lines
+                //so when an HSYNC sample fails we use a running average of the HSYNC width over the last good HSYNC instead of discarding
+                //This is preferred over having another magic number for this mode
+                if (lastValidHsyncWidth != 0 && !firstHsync && countValidHS != 0) {
+                  cyclesCurrent = cyclesLastHsync + runningAverageHsyncWidth ;
+                } else {
+                  //We still don't have a calculated running average
                 skipHS = true;
+                }
+                lastHsyncWasValid = false;
+              }
+
+              else {
+                if (lastHsyncWasValid  && ((cyclesCurrent - cyclesLastHsync) < 40000)) {
+                  //We are into a valid HSYNC
+
+                  lastValidHsyncWidth = (cyclesCurrent - cyclesLastHsync);
+
+                  if (runningAverageHsyncWidth == 0) {
+                    runningAverageHsyncWidth = (cyclesCurrent - cyclesLastHsync);
+                    runningAverageHsyncSamples = 1;
+                  } else {
+                    //Update hsync width running average
+                    runningAverageHsyncSamples ++;
+                    runningAverageHsyncWidth = runningAverageHsyncWidth + ((lastValidHsyncWidth - runningAverageHsyncWidth) / runningAverageHsyncSamples);
 
               }
-              cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
+                }
+                lastHsyncWasValid = true;
+              }
+
+              //Continue processing the HSYNC
 
               currentLine++;
               if (currentLine >= 0) {
@@ -1221,7 +1254,8 @@ FASTRUN void loop() {
                   currentMode = 0;
                   sync = false;
 #ifdef DEBUG
-                  Serial.println("Out of sync HS length");
+                  Serial.print("Out of sync HS length: ");
+                  Serial.println(cyclesCurrent - cyclesLastHsync , DEC);
 #endif
                   break;
                 }
@@ -1390,13 +1424,46 @@ FASTRUN void loop() {
 
             if (levelHsync == !HorizontalPolarity  && levelHsync != lastHsync ) {
               //HSYNC DETECTED
+              cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
 
-              if (!firstHsync && (countIsr != countIsr2 || countIsr != countIsr3)) {
+              if ((countIsr != countIsr2 || countIsr != countIsr3)) {
+                //We are into a NON valid HSYNC
                 //Isr fired during sampling, so not reliable and we skip the line
+                //skipHS = true;
+
+                //Hack to try to use this lines anyway as there is a strange pattern emerging at approx 1/3 of the screen width
+                //where the pixels update less, somehow this is synchonizing with the ISR just at that moment in some lines
+                //so when an HSYNC sample fails we use a running average of the HSYNC width over the last good HSYNC instead of discarding
+                //This is preferred over having another magic number for this mode
+                if (lastValidHsyncWidth != 0 && !firstHsync && countValidHS != 0) {
+                  cyclesCurrent = cyclesLastHsync + runningAverageHsyncWidth ;
+                } else {
+                  //We still don't have a calculated running average
                 skipHS = true;
               }
+                lastHsyncWasValid = false;
+              }
 
-              cyclesCurrent += 5; //ADJUST TO ACCOUNT FOR LOOP CYCLES
+              else {
+                if (lastHsyncWasValid  && ((cyclesCurrent - cyclesLastHsync) < 70000)) {
+                  //We are into a valid HSYNC
+
+                  lastValidHsyncWidth = (cyclesCurrent - cyclesLastHsync);
+
+                  if (runningAverageHsyncWidth == 0) {
+                    runningAverageHsyncWidth = (cyclesCurrent - cyclesLastHsync);
+                    runningAverageHsyncSamples = 1;
+                  } else {
+                    //Update hsync width running average
+                    runningAverageHsyncSamples ++;
+                    runningAverageHsyncWidth = runningAverageHsyncWidth + ((lastValidHsyncWidth - runningAverageHsyncWidth) / runningAverageHsyncSamples);
+
+                  }
+                }
+                lastHsyncWasValid = true;
+              }
+
+              //Continue processing the HSYNC
               currentLine++;
               if (currentLine >= 0) {
                 inputState = STATE_WAIT_FIRST_PIXEL;
@@ -1429,7 +1496,8 @@ FASTRUN void loop() {
                   currentMode = 0;
                   sync = false;
 #ifdef DEBUG
-                  Serial.println("Out of sync HS length");
+                  Serial.print("Out of sync HS length: ");
+                  Serial.println(cyclesCurrent - cyclesLastHsync , DEC);
 #endif
                   break;
                 }
