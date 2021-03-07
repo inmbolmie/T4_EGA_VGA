@@ -22,6 +22,15 @@ For the VGA output signal generation it uses the awesome VGA_t4 library by Jean-
 Before jumping in, be sure that you have read the **current limitations** section and watch the video for an idea of its performance.
 
 
+## Operation
+
+The converter needs to be USB-powered through the Teensy micro-USB connector, from a computer port of a regular wall USB power adapter.
+
+Just connect the DB9 end to the computer/graphics card to convert an the DB15 end to the VGA monitor that will display the converted video signal.
+
+**Please, don't program the Teensy while connected to either the DB9 or DB15 connector.**
+
+
 ## Supported modes
 
 Supported modes and some comments about each one.
