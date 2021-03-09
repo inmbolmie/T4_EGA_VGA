@@ -5,7 +5,7 @@ Teensy 4.0 based CGA/EGA to VGA converter
 ![converter](/images/converter.jpeg)
 
 ```diff
-- I'm reviewing the design based on an active voltage converter to add ESD protection
+- I'm reviewing the design based on an active voltage converter to add ESD protection so I temporary removed those files
 - This souldn't affect the resistor-based version
 ```
 
