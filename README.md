@@ -5,10 +5,8 @@ Teensy 4.0 based CGA/EGA to VGA converter
 ![converter](/images/converter.jpeg)
 
 ```diff
-- Warning, there is one isue reported with a Tandy 1000 killing a Teensy, 
-- so be warned to be careful while we investigate the issue
-- Also be aware that this document has for a reason a section called 
-- **Could this converter kill my Teensy?**
+- I'm reviewing the design based on an active voltage converter to add ESD protection
+- This souldn't affect the resistor-based version
 ```
 
 This is my poor-man's RGBi to VGA converter that can be built with just a Teensy 4.0 and a bunch of resistors. Works quite well with low resolution modes and works also but with a little less quality with high resolution modes. MDA is not supported at this moment.
