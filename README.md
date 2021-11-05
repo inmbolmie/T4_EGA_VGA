@@ -244,7 +244,7 @@ I haven’t tried one other possible solution, that is connect the signals to th
 If you are crazy enough to make a real PCB for this, I provide the needed resources for the TXS0108E version, gerber file, bom and component placement for a popular online fabricator.
 
 
-![PCB board](/images/board.jpeg)
+![PCB board](/images/boardv2.jpeg)
 
 
 ## Q&A:
