@@ -4,6 +4,8 @@ Teensy 4.0 based CGA/EGA to VGA converter
 
 ![converter](/images/converter.jpeg)
 
+_**Second version with improved shielding and protection**_
+
 This is my poor-man's RGBi to VGA converter that can be built with just a Teensy 4.0 and a bunch of resistors. Works quite well with low resolution modes and works also but with a little less quality with high resolution modes. MDA is not supported at this moment.
 
 To make it work you need as a bare minimum the Teensy 4.0, a VGA cable, a DB9 cable, and 25 resistors of 5 different values, so it can be made very cheaply as a DIY project on a breadboard.
