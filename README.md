@@ -231,7 +231,7 @@ I haven’t tried one other possible solution, that is connect the signals to th
 
 ### Schematic for version 1, TXS0108E based capture solution.
 
-![Schematic 1](/images/sch_1.png)
+![Schematic 1](/images/sch_1_2.png)
 
 
 ### Schematic for version 2, resistor based capture solution.
