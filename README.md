@@ -21,9 +21,9 @@ Before jumping in, be sure that you have read the **current limitations** sectio
 
 The converter needs to be USB-powered through the Teensy micro-USB connector, from a computer port of a regular wall USB power adapter. If possible, it is better to power up the converter before connecting it to the video source.
 
-Once the converter is powered, just connect the DE9 end to the computer/graphics card through a suitable cable to convert, and the DB15 end to the VGA monitor that will display the converted video signal. The DE9 cable mush be straight and all the pins must be connected. Try to avoid null modem or other special cables that are not straight pin-to-pin.
+Once the converter is powered, just connect the DE9 end to the computer/graphics card through a suitable cable to convert, and the DE15 end to the VGA monitor that will display the converted video signal. The DE9 cable mush be straight and all the pins must be connected. Try to avoid null modem or other special cables that are not straight pin-to-pin.
 
-**Please, don't program the Teensy while connected to either the DE9 or DB15 connector.**
+**Please, don't program the Teensy while connected to either the DE9 or DE15 connector.**
 
 
 ## Supported modes
