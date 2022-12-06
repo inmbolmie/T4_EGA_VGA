@@ -8,7 +8,7 @@ _**Second version with improved shielding and protection**_
 
 This is my poor-man's RGBi to VGA converter that can be built with just a Teensy 4.0 and a bunch of resistors. Works quite well with low resolution modes and works also but with a little less quality with high resolution modes. MDA is not supported at this moment.
 
-To make it work you need as a bare minimum the Teensy 4.0, a VGA cable, a DB9 cable, and 25 resistors of 5 different values, so it can be made very cheaply as a DIY project on a breadboard.
+To make it work you need as a bare minimum the Teensy 4.0, a VGA cable, a DE9 cable, and 25 resistors of 5 different values, so it can be made very cheaply as a DIY project on a breadboard.
 
 The objective of this project was building the converter using only the Teensy, so it lacks any CPLD or other complex sampling and level shifting interfaces that other better converters like MCE2VGA use.
 
@@ -21,9 +21,9 @@ Before jumping in, be sure that you have read the **current limitations** sectio
 
 The converter needs to be USB-powered through the Teensy micro-USB connector, from a computer port of a regular wall USB power adapter. If possible, it is better to power up the converter before connecting it to the video source.
 
-Once the converter is powered, just connect the DB9 end to the computer/graphics card through a suitable cable to convert, and the DB15 end to the VGA monitor that will display the converted video signal. The DB9 cable mush be straight and all the pins must be connected. Try to avoid null modem or other special cables that are not straight pin-to-pin.
+Once the converter is powered, just connect the DE9 end to the computer/graphics card through a suitable cable to convert, and the DB15 end to the VGA monitor that will display the converted video signal. The DE9 cable mush be straight and all the pins must be connected. Try to avoid null modem or other special cables that are not straight pin-to-pin.
 
-**Please, don't program the Teensy while connected to either the DB9 or DB15 connector.**
+**Please, don't program the Teensy while connected to either the DE9 or DB15 connector.**
 
 
 ## Supported modes
